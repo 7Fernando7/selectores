@@ -1,12 +1,13 @@
 
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { switchMap, tap } from 'rxjs';
+
 import { CountriesService } from '../../services/countries.service';
 import { Region, SmallCountry } from '../../interfaces/country.interfaces';
-import { switchMap } from 'rxjs';
 
 @Component({
-  selector: 'selector-page',
+  selector: 'app-selector-page',
   templateUrl: './selector-page.component.html',
   styles: [
 
@@ -42,11 +43,11 @@ export class SelectorPageComponent implements OnInit {
 
     this.myForm.get('region')!.valueChanges
     .pipe(
+      tap( () => this.myForm.get('country')!.setValue('')),
       switchMap( region => this.countriesService.getCountriesByRegion(region) ),
     )
       .subscribe( countries => {
         this.countriesByRegion = countries;
-        // console.log({ region })
       });
   }
 
